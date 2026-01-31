@@ -1,0 +1,75 @@
+spring:
+  application:
+    name: FoodDeliveryBackend
+
+  # Database Configuration (H2 for development, PostgreSQL for production)
+  datasource:
+    url: jdbc:h2:mem:zwiggydb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+
+  # Mail Configuration (Gmail SMTP)
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:your-email@gmail.com}
+    password: ${MAIL_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# Server Configuration
+server:
+  port: 8080
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:zwiggy-secret-key-for-jwt-token-generation-must-be-at-least-256-bits-long-for-security}
+  expiration: 86400000  # 24 hours in milliseconds
+  refresh-expiration: 604800000  # 7 days in milliseconds
+
+# Razorpay Configuration
+razorpay:
+  key-id: ${RAZORPAY_KEY_ID:rzp_test_S66IWhzZpYZWQ3}
+  key-secret: ${RAZORPAY_KEY_SECRET:PGNLL4gFW3WzGHSmiPTtvi3L}
+  webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:ankit}
+
+# Swagger/OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+
+# File Upload Configuration
+file:
+  upload-dir: ./uploads
+  max-size: 5MB
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.ankit14.fooddeliverybackend: DEBUG
+    org.springframework.security: DEBUG

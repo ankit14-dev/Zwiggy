@@ -1,0 +1,827 @@
+{
+    "info": {
+        "name": "Zwiggy Food Delivery API",
+        "description": "Complete API collection for testing Zwiggy backend.\n\n### Rate Limiting\n- Public: 100 req/min\n- Auth: 10 req/min\n- Authenticated: 60 req/min\n- Admin: 120 req/min\n\nHeaders provided:\n- X-Rate-Limit-Limit\n- X-Rate-Limit-Remaining\n- X-Rate-Limit-Retry-After (on 429)",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080/api"
+        },
+        {
+            "key": "accessToken",
+            "value": ""
+        },
+        {
+            "key": "refreshToken",
+            "value": ""
+        }
+    ],
+    "item": [
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Register User",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"password123\",\n  \"phone\": \"9876543210\"\n}"
+                        },
+                        "url": "{{baseUrl}}/auth/register"
+                    }
+                },
+                {
+                    "name": "Login (Customer)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data) {",
+                                    "    pm.collectionVariables.set('accessToken', jsonData.data.accessToken);",
+                                    "    pm.collectionVariables.set('refreshToken', jsonData.data.refreshToken);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"customer@test.com\",\n  \"password\": \"customer123\"\n}"
+                        },
+                        "url": "{{baseUrl}}/auth/login"
+                    }
+                },
+                {
+                    "name": "Login (Admin)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data) {",
+                                    "    pm.collectionVariables.set('accessToken', jsonData.data.accessToken);",
+                                    "    pm.collectionVariables.set('refreshToken', jsonData.data.refreshToken);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"admin@zwiggy.com\",\n  \"password\": \"admin123\"\n}"
+                        },
+                        "url": "{{baseUrl}}/auth/login"
+                    }
+                },
+                {
+                    "name": "Refresh Token",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+                        },
+                        "url": "{{baseUrl}}/auth/refresh-token"
+                    }
+                },
+                {
+                    "name": "Get Current User",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/auth/me"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Restaurants",
+            "item": [
+                {
+                    "name": "Get All Restaurants",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/restaurants?page=0&size=10&sortBy=rating&sortDir=desc",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "restaurants"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "sortBy",
+                                    "value": "rating"
+                                },
+                                {
+                                    "key": "sortDir",
+                                    "value": "desc"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Top Rated Restaurants",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/restaurants/top-rated?limit=6",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "restaurants",
+                                "top-rated"
+                            ],
+                            "query": [
+                                {
+                                    "key": "limit",
+                                    "value": "6"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Search Restaurants",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/restaurants/search?query=pizza&page=0&size=10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "restaurants",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "query",
+                                    "value": "pizza"
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Restaurants by Cuisine",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/restaurants/cuisine/Indian?page=0&size=10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "restaurants",
+                                "cuisine",
+                                "Indian"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Restaurants by City",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/restaurants/city/Mumbai?page=0&size=10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "restaurants",
+                                "city",
+                                "Mumbai"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Restaurant by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{baseUrl}}/restaurants/1"
+                    }
+                },
+                {
+                    "name": "Create Restaurant (Admin/Restaurant)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"New Restaurant\",\n  \"description\": \"A great new place\",\n  \"cuisine\": \"Mexican\",\n  \"address\": \"123 New Street\",\n  \"city\": \"Delhi\",\n  \"phone\": \"9123456789\",\n  \"deliveryTime\": \"25-35 mins\",\n  \"minOrder\": 200,\n  \"deliveryFee\": 40\n}"
+                        },
+                        "url": "{{baseUrl}}/restaurants"
+                    }
+                },
+                {
+                    "name": "Update Restaurant",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Updated Restaurant\",\n  \"description\": \"Updated description\",\n  \"cuisine\": \"Italian\",\n  \"address\": \"456 Updated Street\",\n  \"city\": \"Mumbai\",\n  \"phone\": \"9876543210\",\n  \"deliveryTime\": \"30-40 mins\",\n  \"minOrder\": 250,\n  \"deliveryFee\": 35\n}"
+                        },
+                        "url": "{{baseUrl}}/restaurants/1"
+                    }
+                },
+                {
+                    "name": "Toggle Restaurant Status",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/restaurants/1/status?isOpen=true",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "restaurants",
+                                "1",
+                                "status"
+                            ],
+                            "query": [
+                                {
+                                    "key": "isOpen",
+                                    "value": "true"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Categories",
+            "item": [
+                {
+                    "name": "Get All Categories",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{baseUrl}}/categories"
+                    }
+                },
+                {
+                    "name": "Get Category by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{baseUrl}}/categories/1"
+                    }
+                },
+                {
+                    "name": "Create Category (Admin)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Seafood\",\n  \"description\": \"Fresh seafood dishes\"\n}"
+                        },
+                        "url": "{{baseUrl}}/categories"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Menu",
+            "item": [
+                {
+                    "name": "Get Menu by Restaurant",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{baseUrl}}/menu/restaurant/1"
+                    }
+                },
+                {
+                    "name": "Get Veg Items by Restaurant",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{baseUrl}}/menu/restaurant/1/veg"
+                    }
+                },
+                {
+                    "name": "Get Bestsellers by Restaurant",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{baseUrl}}/menu/restaurant/1/bestsellers"
+                    }
+                },
+                {
+                    "name": "Search Menu Items",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/menu/search?query=pizza&page=0&size=10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "menu",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "query",
+                                    "value": "pizza"
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Menu Item by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{baseUrl}}/menu/1"
+                    }
+                },
+                {
+                    "name": "Create Menu Item (Admin/Restaurant)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"New Pizza\",\n  \"description\": \"Delicious new pizza\",\n  \"price\": 349,\n  \"categoryId\": 1,\n  \"restaurantId\": 1,\n  \"isVeg\": true,\n  \"isBestseller\": false,\n  \"isAvailable\": true\n}"
+                        },
+                        "url": "{{baseUrl}}/menu"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Orders",
+            "item": [
+                {
+                    "name": "Create Order",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"restaurantId\": 1,\n  \"deliveryAddressId\": 1,\n  \"deliveryInstructions\": \"Ring the doorbell\",\n  \"items\": [\n    {\"menuItemId\": 1, \"quantity\": 2},\n    {\"menuItemId\": 2, \"quantity\": 1}\n  ]\n}"
+                        },
+                        "url": "{{baseUrl}}/orders"
+                    }
+                },
+                {
+                    "name": "Get My Orders",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/orders?page=0&size=10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "orders"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Order by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/orders/1"
+                    }
+                },
+                {
+                    "name": "Update Order Status (Admin/Restaurant)",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/orders/1/status?status=CONFIRMED",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "orders",
+                                "1",
+                                "status"
+                            ],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "CONFIRMED"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Cancel Order",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/orders/1/cancel"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Payments",
+            "item": [
+                {
+                    "name": "Create Payment Order",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/payments/create/1"
+                    }
+                },
+                {
+                    "name": "Verify Payment",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"orderId\": 1,\n  \"razorpayOrderId\": \"order_xxxxx\",\n  \"razorpayPaymentId\": \"pay_xxxxx\",\n  \"razorpaySignature\": \"signature_xxxxx\"\n}"
+                        },
+                        "url": "{{baseUrl}}/payments/verify"
+                    }
+                },
+                {
+                    "name": "Get Payment by Order ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/payments/order/1"
+                    }
+                },
+                {
+                    "name": "Webhook (Razorpay)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-Razorpay-Signature",
+                                "value": "your_webhook_signature_here"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"event\": \"payment.captured\",\n  \"payload\": {\n    \"payment\": {\n      \"entity\": {\n        \"id\": \"pay_xxxxx\",\n        \"order_id\": \"order_xxxxx\",\n        \"status\": \"captured\"\n      }\n    }\n  }\n}"
+                        },
+                        "url": "{{baseUrl}}/payments/webhook",
+                        "description": "Razorpay webhook endpoint. The X-Razorpay-Signature header is used to verify the webhook authenticity."
+                    }
+                }
+            ]
+        },
+        {
+            "name": "User Addresses",
+            "item": [
+                {
+                    "name": "Get My Addresses",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/users/addresses"
+                    }
+                },
+                {
+                    "name": "Create Address",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"street\": \"123 Main Street, Apt 4B\",\n  \"city\": \"Mumbai\",\n  \"state\": \"Maharashtra\",\n  \"pincode\": \"400001\",\n  \"type\": \"HOME\",\n  \"isDefault\": true\n}"
+                        },
+                        "url": "{{baseUrl}}/users/addresses"
+                    }
+                },
+                {
+                    "name": "Update Address",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"street\": \"456 Updated Street\",\n  \"city\": \"Delhi\",\n  \"state\": \"Delhi\",\n  \"pincode\": \"110001\",\n  \"type\": \"WORK\",\n  \"isDefault\": false\n}"
+                        },
+                        "url": "{{baseUrl}}/users/addresses/1"
+                    }
+                },
+                {
+                    "name": "Delete Address",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/users/addresses/1"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Analytics (Admin)",
+            "item": [
+                {
+                    "name": "Get Dashboard Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/analytics/dashboard"
+                    }
+                },
+                {
+                    "name": "Get Order Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/analytics/orders/stats"
+                    }
+                },
+                {
+                    "name": "Get Revenue Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/analytics/revenue"
+                    }
+                },
+                {
+                    "name": "Get Popular Items",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/analytics/popular-items?limit=10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "analytics",
+                                "popular-items"
+                            ],
+                            "query": [
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Restaurant Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/analytics/restaurants/stats"
+                    }
+                }
+            ]
+        }
+    ]
+}
