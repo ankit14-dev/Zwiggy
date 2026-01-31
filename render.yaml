@@ -1,0 +1,57 @@
+services:
+  # The Backend Service (Docker)
+  - type: web
+    name: food-delivery-backend
+    runtime: docker
+    image: docker.io/14ankit/fooddelivery-backend:latest
+    plan: free # Optional: change to starter or standard for production
+    envVars:
+      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        value: org.postgresql.Driver
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+        value: org.hibernate.dialect.PostgreSQLDialect
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      
+      # Database Connection Construction
+      # We map Render's connection details to env vars, then construct the JDBC URL
+      - key: DB_HOST
+        fromDatabase:
+          name: food-delivery-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: food-delivery-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: food-delivery-db
+          property: databaseName
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: food-delivery-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: food-delivery-db
+          property: password
+      
+      # Spring Boot will resolve these placeholders
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+        
+      # Secrets (Render will prompt you for these values)
+      - key: JWT_SECRET
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false
+
+databases:
+  - name: food-delivery-db
+    databaseName: food_delivery_db
+    user: postgres
+    plan: free # 90 days active, then expires (good for testing)

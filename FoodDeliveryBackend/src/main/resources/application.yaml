@@ -43,15 +43,15 @@ server:
 
 # JWT Configuration
 jwt:
-  secret: ${JWT_SECRET:zwiggy-secret-key-for-jwt-token-generation-must-be-at-least-256-bits-long-for-security}
+  secret: ${JWT_SECRET}
   expiration: 86400000  # 24 hours in milliseconds
   refresh-expiration: 604800000  # 7 days in milliseconds
 
 # Razorpay Configuration
 razorpay:
-  key-id: ${RAZORPAY_KEY_ID:rzp_test_S66IWhzZpYZWQ3}
-  key-secret: ${RAZORPAY_KEY_SECRET:PGNLL4gFW3WzGHSmiPTtvi3L}
-  webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:ankit}
+  key-id: ${RAZORPAY_KEY_ID}
+  key-secret: ${RAZORPAY_KEY_SECRET}
+  webhook-secret: ${RAZORPAY_WEBHOOK_SECRET}
 
 # Swagger/OpenAPI Configuration
 springdoc:

@@ -1,0 +1,226 @@
+Loading .env file...
+Loaded property: RAZORPAY_KEY_SECRET
+Loaded property: SPRING_DATASOURCE_URL
+Loaded property: SPRING_DATASOURCE_PASSWORD
+Loaded property: LANGUAGE
+Loaded property: JAVA_HOME
+Loaded property: LC_ALL
+Loaded property: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+Loaded property: SPRING_JPA_HIBERNATE_DDL_AUTO
+Loaded property: JWT_SECRET
+Loaded property: HOME
+Loaded property: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+Loaded property: RAZORPAY_WEBHOOK_SECRET
+Loaded property: RAZORPAY_KEY_ID
+Loaded property: PATH
+Loaded property: JAVA_VERSION
+Loaded property: SPRING_DATASOURCE_USERNAME
+Loaded property: LANG
+Loaded property: HOSTNAME
+JWT_SECRET set: true
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2026-01-31T19:28:27.961Z  INFO 1 --- [FoodDeliveryBackend] [           main] c.a.f.FoodDeliveryBackendApplication     : Starting FoodDeliveryBackendApplication v0.0.1-SNAPSHOT using Java 21.0.9 with PID 1 (/app/app.jar started by root in /app)
+2026-01-31T19:28:27.963Z DEBUG 1 --- [FoodDeliveryBackend] [           main] c.a.f.FoodDeliveryBackendApplication     : Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-01-31T19:28:27.964Z  INFO 1 --- [FoodDeliveryBackend] [           main] c.a.f.FoodDeliveryBackendApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-01-31T19:28:28.858Z  INFO 1 --- [FoodDeliveryBackend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-31T19:28:28.927Z  INFO 1 --- [FoodDeliveryBackend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 62 ms. Found 8 JPA repository interfaces.
+2026-01-31T19:28:29.507Z  INFO 1 --- [FoodDeliveryBackend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-01-31T19:28:29.521Z  INFO 1 --- [FoodDeliveryBackend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-31T19:28:29.522Z  INFO 1 --- [FoodDeliveryBackend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.16]
+2026-01-31T19:28:29.580Z  INFO 1 --- [FoodDeliveryBackend] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-31T19:28:29.582Z  INFO 1 --- [FoodDeliveryBackend] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1544 ms
+2026-01-31T19:28:29.617Z  INFO 1 --- [FoodDeliveryBackend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-31T19:28:29.783Z  INFO 1 --- [FoodDeliveryBackend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1c3b6963
+2026-01-31T19:28:29.785Z  INFO 1 --- [FoodDeliveryBackend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-31T19:28:29.796Z  INFO 1 --- [FoodDeliveryBackend] [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://postgres:5432/food_delivery_db'
+2026-01-31T19:28:29.942Z  INFO 1 --- [FoodDeliveryBackend] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-31T19:28:29.998Z  INFO 1 --- [FoodDeliveryBackend] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.3.1.Final
+2026-01-31T19:28:30.026Z  INFO 1 --- [FoodDeliveryBackend] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-31T19:28:30.179Z  INFO 1 --- [FoodDeliveryBackend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-31T19:28:30.212Z  WARN 1 --- [FoodDeliveryBackend] [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-31T19:28:31.036Z  INFO 1 --- [FoodDeliveryBackend] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-31T19:28:31.198Z  INFO 1 --- [FoodDeliveryBackend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-31T19:28:31.518Z DEBUG 1 --- [FoodDeliveryBackend] [           main] c.a.f.config.JwtAuthenticationFilter     : Filter 'jwtAuthenticationFilter' configured for use
+2026-01-31T19:28:31.519Z DEBUG 1 --- [FoodDeliveryBackend] [           main] c.a.f.filter.RateLimitFilter             : Filter 'rateLimitFilter' configured for use
+2026-01-31T19:28:31.614Z  INFO 1 --- [FoodDeliveryBackend] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-01-31T19:28:33.011Z  INFO 1 --- [FoodDeliveryBackend] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4dbd1fdb, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7f3a9c11, org.springframework.security.web.context.SecurityContextHolderFilter@de9650a, org.springframework.security.web.header.HeaderWriterFilter@19bdf520, org.springframework.web.filter.CorsFilter@7f888518, org.springframework.web.filter.CorsFilter@4fb54ca0, org.springframework.security.web.authentication.logout.LogoutFilter@14f31f10, com.ankit14.fooddeliverybackend.config.JwtAuthenticationFilter@1cb7f2fe, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@56de4d71, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@44575b13, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6a53c14a, org.springframework.security.web.session.SessionManagementFilter@16ec2ffa, org.springframework.security.web.access.ExceptionTranslationFilter@20163c43, org.springframework.security.web.access.intercept.AuthorizationFilter@6f4bafc2]
+2026-01-31T19:28:33.294Z  INFO 1 --- [FoodDeliveryBackend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-01-31T19:28:33.301Z  INFO 1 --- [FoodDeliveryBackend] [           main] c.a.f.FoodDeliveryBackendApplication     : Started FoodDeliveryBackendApplication in 5.839 seconds (process running for 6.176)
+Hibernate: 
+    select
+        count(*) 
+    from
+        users u1_0
+Hibernate: 
+    insert 
+    into
+        users
+        (created_at, email, is_active, name, password, phone, role, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (created_at, email, is_active, name, password, phone, role, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (created_at, email, is_active, name, password, phone, role, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        categories
+        (created_at, description, image_url, is_active, name) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        categories
+        (created_at, description, image_url, is_active, name) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        categories
+        (created_at, description, image_url, is_active, name) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        categories
+        (created_at, description, image_url, is_active, name) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        categories
+        (created_at, description, image_url, is_active, name) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        restaurants
+        (address, city, created_at, cuisine, delivery_fee, delivery_time, description, image_url, is_active, is_open, min_order, name, owner_id, phone, rating, total_ratings, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        restaurants
+        (address, city, created_at, cuisine, delivery_fee, delivery_time, description, image_url, is_active, is_open, min_order, name, owner_id, phone, rating, total_ratings, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        restaurants
+        (address, city, created_at, cuisine, delivery_fee, delivery_time, description, image_url, is_active, is_open, min_order, name, owner_id, phone, rating, total_ratings, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        menu_items
+        (category_id, created_at, description, image_url, is_available, is_bestseller, is_veg, name, preparation_time, price, restaurant_id, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        menu_items
+        (category_id, created_at, description, image_url, is_available, is_bestseller, is_veg, name, preparation_time, price, restaurant_id, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        menu_items
+        (category_id, created_at, description, image_url, is_available, is_bestseller, is_veg, name, preparation_time, price, restaurant_id, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        menu_items
+        (category_id, created_at, description, image_url, is_available, is_bestseller, is_veg, name, preparation_time, price, restaurant_id, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        menu_items
+        (category_id, created_at, description, image_url, is_available, is_bestseller, is_veg, name, preparation_time, price, restaurant_id, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        menu_items
+        (category_id, created_at, description, image_url, is_available, is_bestseller, is_veg, name, preparation_time, price, restaurant_id, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        menu_items
+        (category_id, created_at, description, image_url, is_available, is_bestseller, is_veg, name, preparation_time, price, restaurant_id, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        menu_items
+        (category_id, created_at, description, image_url, is_available, is_bestseller, is_veg, name, preparation_time, price, restaurant_id, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        menu_items
+        (category_id, created_at, description, image_url, is_available, is_bestseller, is_veg, name, preparation_time, price, restaurant_id, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        menu_items
+        (category_id, created_at, description, image_url, is_available, is_bestseller, is_veg, name, preparation_time, price, restaurant_id, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        menu_items
+        (category_id, created_at, description, image_url, is_available, is_bestseller, is_veg, name, preparation_time, price, restaurant_id, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        menu_items
+        (category_id, created_at, description, image_url, is_available, is_bestseller, is_veg, name, preparation_time, price, restaurant_id, updated_at) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Γ£à Sample data seeded successfully!
+≡ƒôº Admin login: admin@zwiggy.com / admin123
+≡ƒôº Customer login: customer@test.com / customer123
+≡ƒôº Restaurant login: restaurant@test.com / restaurant123
