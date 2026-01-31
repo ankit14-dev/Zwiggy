@@ -3,7 +3,8 @@ services:
   - type: web
     name: food-delivery-backend
     runtime: docker
-    image: docker.io/14ankit/fooddelivery-backend:latest
+    image: 
+      url: docker.io/14ankit/fooddelivery-backend:latest
     plan: free # Optional: change to starter or standard for production
     envVars:
       - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
