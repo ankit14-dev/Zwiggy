@@ -27,7 +27,7 @@ services:
       - key: DB_NAME
         fromDatabase:
           name: food-delivery-db
-          property: databaseName
+          property: database
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: food-delivery-db
@@ -54,5 +54,4 @@ services:
 databases:
   - name: food-delivery-db
     databaseName: food_delivery_db
-    user: postgres
     plan: free # 90 days active, then expires (good for testing)
