@@ -12,10 +12,38 @@ services:
         value: org.hibernate.dialect.PostgreSQLDialect
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: update
-      - key: SPRING_DATASOURCE_URL
+      
+      # Get individual DB properties from Render
+      - key: DB_HOST
         fromDatabase:
           name: food-delivery-db
-          property: connectionString
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: food-delivery-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: food-delivery-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: food-delivery-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: food-delivery-db
+          property: password
+      
+      # Construct JDBC URL with correct prefix
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      - key: SPRING_DATASOURCE_USERNAME
+        value: ${DB_USER}
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: ${DB_PASSWORD}
+        
+      # Application secrets
       - key: JWT_SECRET
         sync: false
       - key: RAZORPAY_KEY_ID
