@@ -2,6 +2,12 @@
 
 Zwiggy is a full-stack food delivery application built with Spring Boot and React offering a seamless experience for customers, administrators, and restaurants.
 
+## 🌐 Live Deployment
+
+- **Frontend**: [https://zwiggy-flax.vercel.app/](https://zwiggy-flax.vercel.app/)
+- **Backend API**: [https://food-delivery-backend-ckyd.onrender.com](https://food-delivery-backend-ckyd.onrender.com)
+- **API Documentation (Swagger)**: [https://food-delivery-backend-ckyd.onrender.com/swagger-ui/index.html](https://food-delivery-backend-ckyd.onrender.com/swagger-ui/index.html)
+
 ## 🚀 Features
 
 ### Customer

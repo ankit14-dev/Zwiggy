@@ -9,7 +9,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://529e3ffd1b7a.ngrok-free.app',
+        target: 'https://food-delivery-backend-ckyd.onrender.com',
         changeOrigin: true,
         secure: false,
       },
