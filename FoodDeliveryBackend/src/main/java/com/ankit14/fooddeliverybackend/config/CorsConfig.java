@@ -21,7 +21,8 @@ public class CorsConfig {
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:5173", // Vite dev server
                 "http://localhost:3000", // Alternative frontend port
-                "http://127.0.0.1:5173"));
+                "http://127.0.0.1:5173",
+                "https://zwiggy-flax.vercel.app")); // Production frontend
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
