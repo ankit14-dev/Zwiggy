@@ -12,8 +12,11 @@ function ProtectedRoute() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-orange-500 border-t-transparent"></div>
+      <div className="min-h-screen flex items-center justify-center bg-[#f1f1f6]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-[#fc8019] border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-[#686b78] text-sm">Loading...</p>
+        </div>
       </div>
     );
   }
@@ -28,7 +31,7 @@ function ProtectedRoute() {
 // Layout with Navbar and Footer
 function Layout() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
       <main className="flex-1">
         <Outlet />

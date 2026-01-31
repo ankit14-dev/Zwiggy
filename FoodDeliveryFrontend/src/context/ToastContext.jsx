@@ -8,7 +8,7 @@ let toastId = 0;
 export function ToastProvider({ children }) {
     const [toasts, setToasts] = useState([]);
 
-    const addToast = useCallback((message, type = 'info', duration = 4000) => {
+    const addToast = useCallback((message, type = 'info', duration = 3000) => {
         const id = ++toastId;
         setToasts((prev) => [...prev, { id, message, type }]);
 
@@ -44,7 +44,7 @@ function ToastContainer({ toasts, removeToast }) {
     if (toasts.length === 0) return null;
 
     return (
-        <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-3">
             {toasts.map((toast) => (
                 <Toast key={toast.id} toast={toast} onClose={() => removeToast(toast.id)} />
             ))}
@@ -53,41 +53,46 @@ function ToastContainer({ toasts, removeToast }) {
 }
 
 function Toast({ toast, onClose }) {
-    const getIcon = () => {
+    const getConfig = () => {
         switch (toast.type) {
             case 'success':
-                return <CheckCircle className="w-5 h-5 text-green-500" />;
+                return {
+                    icon: <CheckCircle className="w-5 h-5" />,
+                    bgColor: 'bg-[#48c479]',
+                    textColor: 'text-white',
+                };
             case 'error':
-                return <AlertCircle className="w-5 h-5 text-red-500" />;
+                return {
+                    icon: <AlertCircle className="w-5 h-5" />,
+                    bgColor: 'bg-[#e23744]',
+                    textColor: 'text-white',
+                };
             case 'warning':
-                return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
+                return {
+                    icon: <AlertTriangle className="w-5 h-5" />,
+                    bgColor: 'bg-[#db7c38]',
+                    textColor: 'text-white',
+                };
             default:
-                return <Info className="w-5 h-5 text-blue-500" />;
+                return {
+                    icon: <Info className="w-5 h-5" />,
+                    bgColor: 'bg-[#3d4152]',
+                    textColor: 'text-white',
+                };
         }
     };
 
-    const getBgColor = () => {
-        switch (toast.type) {
-            case 'success':
-                return 'bg-green-50 border-green-200';
-            case 'error':
-                return 'bg-red-50 border-red-200';
-            case 'warning':
-                return 'bg-yellow-50 border-yellow-200';
-            default:
-                return 'bg-blue-50 border-blue-200';
-        }
-    };
+    const config = getConfig();
 
     return (
         <div
-            className={`flex items-center gap-3 p-4 rounded-lg border shadow-lg animate-slide-up ${getBgColor()}`}
+            className={`flex items-center gap-3 px-5 py-3.5 rounded-lg shadow-[0_6px_30px_rgba(0,0,0,0.25)] animate-slide-up min-w-[280px] ${config.bgColor} ${config.textColor}`}
         >
-            {getIcon()}
-            <p className="text-gray-800 font-medium">{toast.message}</p>
+            {config.icon}
+            <p className="font-medium text-sm flex-1">{toast.message}</p>
             <button
                 onClick={onClose}
-                className="ml-2 text-gray-400 hover:text-gray-600 transition-colors"
+                className="ml-2 opacity-80 hover:opacity-100 transition-opacity"
             >
                 <X className="w-4 h-4" />
             </button>
