@@ -39,9 +39,9 @@ export default function Login() {
                 <div className="absolute inset-0 bg-gradient-to-br from-[#fc8019] to-[#e67309]"></div>
                 <div className="relative z-10 text-center p-12">
                     <img 
-                        src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/portal/m/seo/hero_image_web_new.png"
-                        alt="Food"
-                        className="w-full max-w-md mx-auto mb-8"
+                        src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&h=400&fit=crop"
+                        alt="Delicious food"
+                        className="w-full max-w-sm mx-auto mb-8 rounded-2xl shadow-2xl"
                     />
                     <h2 className="text-4xl font-extrabold text-white mb-4">
                         Order food you love
