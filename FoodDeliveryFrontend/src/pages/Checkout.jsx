@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Plus, CreditCard, Loader, CheckCircle } from 'lucide-react';
+import { MapPin, Plus, CheckCircle, Loader, Home, Briefcase, Heart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { addressService, orderService, paymentService } from '../services';
+
+const addressTypeIcons = {
+    HOME: Home,
+    WORK: Briefcase,
+    OTHER: Heart,
+};
 
 export default function Checkout() {
     const { items, restaurant, getSubtotal, clearCart } = useCart();
@@ -30,12 +36,19 @@ export default function Checkout() {
 
     const subtotal = getSubtotal();
     const deliveryFee = restaurant?.deliveryFee || 30;
-    const tax = subtotal * 0.05;
-    const total = subtotal + deliveryFee + tax;
+    const platformFee = 5;
+    const gstAndCharges = Math.round(subtotal * 0.05);
+    const total = subtotal + deliveryFee + platformFee + gstAndCharges;
 
     useEffect(() => {
         loadAddresses();
     }, []);
+
+    useEffect(() => {
+        if (items.length === 0 && !orderPlaced) {
+            navigate('/cart');
+        }
+    }, [items.length, orderPlaced, navigate]);
 
     const loadAddresses = async () => {
         try {
@@ -58,7 +71,7 @@ export default function Checkout() {
             setSelectedAddress(response.data.id);
             setShowAddAddress(false);
             setNewAddress({ street: '', city: '', state: '', pincode: '', type: 'HOME', isDefault: false });
-            success('Address added');
+            success('Address added successfully');
         } catch (err) {
             error('Failed to add address');
         }
@@ -72,7 +85,6 @@ export default function Checkout() {
 
         setLoading(true);
         try {
-            // Create order
             const orderData = {
                 restaurantId: restaurant.id,
                 deliveryAddressId: selectedAddress,
@@ -86,11 +98,9 @@ export default function Checkout() {
             const orderResponse = await orderService.create(orderData);
             const order = orderResponse.data;
 
-            // Create payment order
             const paymentResponse = await paymentService.createPaymentOrder(order.id);
             const payment = paymentResponse.data;
 
-            // Initialize Razorpay
             const options = {
                 key: payment.razorpayKeyId,
                 amount: payment.amount * 100,
@@ -121,7 +131,7 @@ export default function Checkout() {
                     contact: user?.phone,
                 },
                 theme: {
-                    color: '#ff6b35',
+                    color: '#fc8019',
                 },
             };
 
@@ -134,29 +144,28 @@ export default function Checkout() {
         }
     };
 
-    // Redirect to cart if no items (must be before conditional returns for hooks rules)
-    useEffect(() => {
-        if (items.length === 0 && !orderPlaced) {
-            navigate('/cart');
-        }
-    }, [items.length, orderPlaced, navigate]);
-
     if (orderPlaced) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="text-center bg-white p-8 rounded-2xl shadow-lg max-w-md">
-                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <CheckCircle className="w-10 h-10 text-green-500" />
+            <div className="min-h-screen bg-[#f1f1f6] flex items-center justify-center px-4">
+                <div className="text-center bg-white p-10 rounded-3xl shadow-lg max-w-md w-full">
+                    <div className="w-24 h-24 bg-[#e5f7e3] rounded-full flex items-center justify-center mx-auto mb-6">
+                        <CheckCircle className="w-12 h-12 text-[#60b246]" />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Order Placed!</h2>
-                    <p className="text-gray-600 mb-6">
-                        Your order has been placed successfully. You can track it in your orders.
+                    <h2 className="text-2xl font-bold text-[#3d4152] mb-2">Order Placed Successfully!</h2>
+                    <p className="text-[#7e808c] mb-8">
+                        Your order has been placed and will be delivered soon.
                     </p>
-                    <div className="flex gap-4 justify-center">
-                        <button onClick={() => navigate('/orders')} className="btn-primary">
-                            View Orders
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                        <button 
+                            onClick={() => navigate('/orders')} 
+                            className="px-8 py-3 bg-[#fc8019] hover:bg-[#e67309] text-white font-bold text-sm uppercase rounded-lg transition-colors"
+                        >
+                            Track Order
                         </button>
-                        <button onClick={() => navigate('/')} className="btn-secondary">
+                        <button 
+                            onClick={() => navigate('/')} 
+                            className="px-8 py-3 bg-white hover:bg-gray-50 text-[#3d4152] font-bold text-sm uppercase rounded-lg border border-gray-200 transition-colors"
+                        >
                             Back to Home
                         </button>
                     </div>
@@ -170,189 +179,241 @@ export default function Checkout() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
-            <div className="max-w-4xl mx-auto px-4">
-                <h1 className="text-2xl font-bold text-gray-800 mb-6">Checkout</h1>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2 space-y-6">
+        <div className="min-h-screen bg-[#e9ecee]">
+            <div className="max-w-[1000px] mx-auto py-8 px-4">
+                <div className="grid lg:grid-cols-5 gap-6">
+                    {/* Left Column - Address & Instructions */}
+                    <div className="lg:col-span-3 space-y-6">
                         {/* Delivery Address */}
-                        <div className="bg-white rounded-xl shadow-sm p-6">
-                            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                                <MapPin className="w-5 h-5 text-orange-500" />
-                                Delivery Address
-                            </h3>
-
-                            {addresses.length === 0 && !showAddAddress && (
-                                <p className="text-gray-500 text-sm mb-4">No saved addresses</p>
-                            )}
-
-                            <div className="space-y-3">
-                                {addresses.map((addr) => (
-                                    <label
-                                        key={addr.id}
-                                        className={`block p-4 border rounded-lg cursor-pointer transition-colors ${selectedAddress === addr.id
-                                            ? 'border-orange-500 bg-orange-50'
-                                            : 'border-gray-200 hover:border-orange-300'
-                                            }`}
-                                    >
-                                        <input
-                                            type="radio"
-                                            name="address"
-                                            value={addr.id}
-                                            checked={selectedAddress === addr.id}
-                                            onChange={() => setSelectedAddress(addr.id)}
-                                            className="sr-only"
-                                        />
-                                        <div className="flex justify-between">
-                                            <div>
-                                                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-                                                    {addr.type}
-                                                </span>
-                                                <p className="mt-2 text-gray-800">{addr.street}</p>
-                                                <p className="text-sm text-gray-500">
-                                                    {addr.city}, {addr.state} - {addr.pincode}
-                                                </p>
-                                            </div>
-                                            {selectedAddress === addr.id && (
-                                                <CheckCircle className="w-5 h-5 text-orange-500" />
-                                            )}
-                                        </div>
-                                    </label>
-                                ))}
+                        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-[#fc8019] rounded-full flex items-center justify-center">
+                                        <MapPin className="w-5 h-5 text-white" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-[#3d4152]">Delivery Address</h3>
+                                        <p className="text-xs text-[#7e808c]">Select where you want your order delivered</p>
+                                    </div>
+                                </div>
                             </div>
 
-                            {showAddAddress ? (
-                                <form onSubmit={handleAddAddress} className="mt-4 space-y-4">
-                                    <input
-                                        type="text"
-                                        placeholder="Street Address"
-                                        value={newAddress.street}
-                                        onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
-                                        className="input-field"
-                                        required
-                                    />
-                                    <div className="grid grid-cols-2 gap-4">
+                            <div className="p-6">
+                                {addresses.length === 0 && !showAddAddress && (
+                                    <div className="text-center py-8">
+                                        <MapPin className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                        <p className="text-[#7e808c] mb-4">No saved addresses</p>
+                                    </div>
+                                )}
+
+                                <div className="space-y-3">
+                                    {addresses.map((addr) => {
+                                        const IconComponent = addressTypeIcons[addr.type] || Home;
+                                        return (
+                                            <label
+                                                key={addr.id}
+                                                className={`flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                                                    selectedAddress === addr.id
+                                                        ? 'border-[#60b246] bg-[#e5f7e3]/30'
+                                                        : 'border-gray-200 hover:border-gray-300'
+                                                }`}
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="address"
+                                                    value={addr.id}
+                                                    checked={selectedAddress === addr.id}
+                                                    onChange={() => setSelectedAddress(addr.id)}
+                                                    className="sr-only"
+                                                />
+                                                <IconComponent className={`w-5 h-5 mt-0.5 flex-shrink-0 ${
+                                                    selectedAddress === addr.id ? 'text-[#60b246]' : 'text-[#3d4152]'
+                                                }`} />
+                                                <div className="flex-1">
+                                                    <p className="font-bold text-[#3d4152] text-sm">{addr.type}</p>
+                                                    <p className="text-[#7e808c] text-sm mt-1">{addr.street}</p>
+                                                    <p className="text-[#7e808c] text-sm">
+                                                        {addr.city}, {addr.state} - {addr.pincode}
+                                                    </p>
+                                                </div>
+                                                {selectedAddress === addr.id && (
+                                                    <CheckCircle className="w-5 h-5 text-[#60b246] flex-shrink-0" />
+                                                )}
+                                            </label>
+                                        );
+                                    })}
+                                </div>
+
+                                {showAddAddress ? (
+                                    <form onSubmit={handleAddAddress} className="mt-6 p-4 bg-[#f1f1f6] rounded-xl space-y-4">
+                                        <h4 className="font-bold text-[#3d4152]">Add New Address</h4>
+                                        <div className="flex gap-2">
+                                            {['HOME', 'WORK', 'OTHER'].map((type) => (
+                                                <button
+                                                    key={type}
+                                                    type="button"
+                                                    onClick={() => setNewAddress({ ...newAddress, type })}
+                                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                                        newAddress.type === type
+                                                            ? 'bg-[#3d4152] text-white'
+                                                            : 'bg-white text-[#3d4152] border border-gray-200'
+                                                    }`}
+                                                >
+                                                    {type}
+                                                </button>
+                                            ))}
+                                        </div>
                                         <input
                                             type="text"
-                                            placeholder="City"
-                                            value={newAddress.city}
-                                            onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+                                            placeholder="Street Address"
+                                            value={newAddress.street}
+                                            onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
                                             className="input-field"
                                             required
                                         />
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <input
+                                                type="text"
+                                                placeholder="City"
+                                                value={newAddress.city}
+                                                onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+                                                className="input-field"
+                                                required
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="State"
+                                                value={newAddress.state}
+                                                onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
+                                                className="input-field"
+                                                required
+                                            />
+                                        </div>
                                         <input
                                             type="text"
-                                            placeholder="State"
-                                            value={newAddress.state}
-                                            onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
+                                            placeholder="Pincode"
+                                            value={newAddress.pincode}
+                                            onChange={(e) => setNewAddress({ ...newAddress, pincode: e.target.value })}
                                             className="input-field"
                                             required
                                         />
-                                    </div>
-                                    <input
-                                        type="text"
-                                        placeholder="Pincode"
-                                        value={newAddress.pincode}
-                                        onChange={(e) => setNewAddress({ ...newAddress, pincode: e.target.value })}
-                                        className="input-field"
-                                        required
-                                    />
-                                    <div className="flex gap-3">
-                                        <button type="submit" className="btn-primary">
-                                            Save Address
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowAddAddress(false)}
-                                            className="btn-secondary"
-                                        >
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </form>
-                            ) : (
-                                <button
-                                    onClick={() => setShowAddAddress(true)}
-                                    className="mt-4 flex items-center gap-2 text-orange-500 hover:text-orange-600 font-medium"
-                                >
-                                    <Plus className="w-5 h-5" />
-                                    Add New Address
-                                </button>
-                            )}
+                                        <div className="flex gap-3">
+                                            <button 
+                                                type="submit" 
+                                                className="px-6 py-3 bg-[#60b246] hover:bg-[#48a832] text-white font-bold text-sm uppercase rounded-lg transition-colors"
+                                            >
+                                                Save Address
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowAddAddress(false)}
+                                                className="px-6 py-3 bg-white text-[#3d4152] font-bold text-sm uppercase rounded-lg border border-gray-200 transition-colors hover:bg-gray-50"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </form>
+                                ) : (
+                                    <button
+                                        onClick={() => setShowAddAddress(true)}
+                                        className="mt-4 flex items-center gap-2 text-[#fc8019] font-bold text-sm hover:text-[#e67309] transition-colors"
+                                    >
+                                        <Plus className="w-5 h-5" />
+                                        Add New Address
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         {/* Delivery Instructions */}
-                        <div className="bg-white rounded-xl shadow-sm p-6">
-                            <h3 className="text-lg font-bold text-gray-800 mb-4">Delivery Instructions</h3>
+                        <div className="bg-white rounded-2xl p-6 shadow-sm">
+                            <h3 className="font-bold text-[#3d4152] mb-4">Delivery Instructions (Optional)</h3>
                             <textarea
                                 value={deliveryInstructions}
                                 onChange={(e) => setDeliveryInstructions(e.target.value)}
-                                placeholder="E.g., Leave at door, call on arrival, etc."
+                                placeholder="E.g., Leave at door, call on arrival..."
                                 className="input-field h-24 resize-none"
                             />
                         </div>
                     </div>
 
-                    {/* Order Summary */}
-                    <div className="lg:col-span-1">
-                        <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24">
-                            <h3 className="text-lg font-bold text-gray-800 mb-4">Order Summary</h3>
+                    {/* Right Column - Order Summary */}
+                    <div className="lg:col-span-2">
+                        <div className="bg-white rounded-2xl shadow-sm sticky top-24 overflow-hidden">
+                            {/* Restaurant Info */}
+                            <div className="p-5 border-b border-gray-100 flex items-center gap-4">
+                                <img
+                                    src={restaurant?.imageUrl || 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_100,h_100/placeholder'}
+                                    alt={restaurant?.name}
+                                    className="w-12 h-12 rounded-lg object-cover"
+                                />
+                                <div>
+                                    <h4 className="font-bold text-[#3d4152]">{restaurant?.name}</h4>
+                                    <p className="text-xs text-[#7e808c]">{restaurant?.city}</p>
+                                </div>
+                            </div>
 
-                            <div className="max-h-48 overflow-y-auto mb-4">
+                            {/* Items Summary */}
+                            <div className="p-5 border-b border-gray-100 max-h-48 overflow-y-auto">
                                 {items.map((item) => (
                                     <div key={item.id} className="flex justify-between text-sm py-2">
-                                        <span className="text-gray-600">
+                                        <span className="text-[#7e808c]">
                                             {item.name} × {item.quantity}
                                         </span>
-                                        <span className="font-medium">₹{(item.price * item.quantity).toFixed(2)}</span>
+                                        <span className="text-[#3d4152] font-medium">
+                                            ₹{(item.price * item.quantity).toFixed(2)}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
 
-                            <hr className="my-4" />
+                            {/* Bill Details */}
+                            <div className="p-5">
+                                <h4 className="font-bold text-[#3d4152] mb-4">Bill Details</h4>
+                                <div className="space-y-3 text-sm">
+                                    <div className="flex justify-between">
+                                        <span className="text-[#686b78]">Item Total</span>
+                                        <span className="text-[#3d4152]">₹{subtotal.toFixed(2)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#686b78]">Delivery Fee</span>
+                                        <span className="text-[#3d4152]">₹{deliveryFee.toFixed(2)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#686b78]">Platform fee</span>
+                                        <span className="text-[#3d4152]">₹{platformFee.toFixed(2)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#686b78]">GST and Charges</span>
+                                        <span className="text-[#3d4152]">₹{gstAndCharges.toFixed(2)}</span>
+                                    </div>
+                                    <div className="border-t border-gray-100 pt-3 mt-3">
+                                        <div className="flex justify-between font-bold">
+                                            <span className="text-[#3d4152]">TO PAY</span>
+                                            <span className="text-[#3d4152]">₹{total.toFixed(0)}</span>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <div className="space-y-3 text-sm">
-                                <div className="flex justify-between">
-                                    <span className="text-gray-600">Subtotal</span>
-                                    <span className="font-medium">₹{subtotal.toFixed(2)}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-gray-600">Delivery Fee</span>
-                                    <span className="font-medium">₹{deliveryFee.toFixed(2)}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-gray-600">GST (5%)</span>
-                                    <span className="font-medium">₹{tax.toFixed(2)}</span>
-                                </div>
-                                <hr />
-                                <div className="flex justify-between text-lg font-bold">
-                                    <span>Total</span>
-                                    <span>₹{total.toFixed(2)}</span>
-                                </div>
+                                <button
+                                    onClick={handlePlaceOrder}
+                                    disabled={loading || !selectedAddress}
+                                    className="w-full mt-6 py-4 bg-[#60b246] hover:bg-[#48a832] text-white font-bold text-sm uppercase rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                >
+                                    {loading ? (
+                                        <>
+                                            <Loader className="w-5 h-5 animate-spin" />
+                                            Processing...
+                                        </>
+                                    ) : (
+                                        `Pay ₹${total.toFixed(0)}`
+                                    )}
+                                </button>
+
+                                <p className="text-xs text-[#93959f] mt-3 text-center">
+                                    Secured by Razorpay
+                                </p>
                             </div>
-
-                            <button
-                                onClick={handlePlaceOrder}
-                                disabled={loading || !selectedAddress}
-                                className="w-full btn-primary mt-6 py-3 flex items-center justify-center gap-2 disabled:opacity-50"
-                            >
-                                {loading ? (
-                                    <>
-                                        <Loader className="w-5 h-5 animate-spin" />
-                                        Processing...
-                                    </>
-                                ) : (
-                                    <>
-                                        <CreditCard className="w-5 h-5" />
-                                        Pay ₹{total.toFixed(2)}
-                                    </>
-                                )}
-                            </button>
-
-                            <p className="text-xs text-gray-500 mt-3 text-center">
-                                Secured by Razorpay
-                            </p>
                         </div>
                     </div>
                 </div>
